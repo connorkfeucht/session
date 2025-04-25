@@ -25,7 +25,7 @@ export default function RootLayout() {
     <Stack
       screenOptions={{
         headerTitle: "Seshn",
-        headerTitleStyle: { fontFamily: "PlayfairDisplayItalic" }, // TODO: Make this text larger and more bold
+        headerTitleStyle: { fontFamily: "PlayfairDisplay" }, // TODO: Make this text larger and more bold
       }}
     />
   );
