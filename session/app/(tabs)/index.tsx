@@ -1,5 +1,6 @@
 import { Text, View } from "react-native";
 
+// TODO: Show self and other's study seshns that they've posted. 
 export default function Index() {
   return (
     <View
@@ -9,7 +10,7 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Text style={{fontFamily: 'PlayfairDisplay' }}>Edit app/index.tsx to edit this screen.</Text>
+      <Text style={{fontFamily: 'PlayfairDisplay' }}>Looks empty! Add friends to see their study seshns here.</Text>
     </View>
   );
 }

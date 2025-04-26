@@ -8,6 +8,8 @@ export default function Study() {
     const [setsCompleted, setSetsCompleted] = useState(0);
 
     // TODO: Need to do UI Polishing
+    // TODO: Need to have section that starts a study session before timer shows up
+    // TODO: Need to save statistics for a study session 
 
     useEffect(() => {
         let interval: NodeJS.Timeout | null = null;
