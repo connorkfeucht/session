@@ -2,30 +2,43 @@ import { Text, View, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";
 
 export default function Study() {
-    const [timer, setTimer] = useState(60 * 25); // initial countdown value (60 seconds)
+    const [timer, setTimer] = useState(60*25); // initial countdown value (60 seconds)
     const [isRunning, setIsRunning] = useState(false); // tracks if the timer is running
-    // TODO: Currently only counts down to 00:00. need to save number of completed countdowns, and
-    // TODO: flip flop between 25:00 and 5:00 countdowns.
+    const [isWorkPhase, setIsWorkPhase] = useState(true);
+    const [setsCompleted, setSetsCompleted] = useState(0);
+
+    // TODO: Need to do UI Polishing
+
     useEffect(() => {
         let interval: NodeJS.Timeout | null = null;
+
         if (isRunning && timer > 0) {
             interval = setInterval(() => {
                 setTimer((prevTimer) => prevTimer - 1);
-            }, 1000); // decrease timer by 1 every second
-        } else if (!isRunning && interval) {
-            clearInterval(interval); // clear interval when stopped
+            }, 0.00001); // decrease timer by 1 every second
+        } else if (isRunning && timer === 0) {
+            clearInterval(interval); // clear interval when timer reaches 0
+            
+            if (isWorkPhase) { // if timer is 0 and just finished work phase
+                setSetsCompleted((prevSets) => prevSets + 1);
+                setTimer(60*5);
+                setIsWorkPhase(false);
+            } else { // end the break
+                setTimer(60*25);
+                setIsWorkPhase(true);
+            }
         }
 
         return () => {
-            if (interval) clearInterval(interval);
+            if (interval) clearInterval(interval); // cleanup interval on unmount
         };
 
-    }, [isRunning, timer]);
+    }, [isRunning, timer, isWorkPhase]);
 
     const handleToggleTimer = () => {
         if (isRunning) {
             setIsRunning(false); // stop timer
-            setTimer(60 * 25); // reset timer
+            setTimer(isWorkPhase ? 60*25 : 60*5); // reset timer
         } else {
             setIsRunning(true); // start timer
         }
@@ -51,7 +64,7 @@ export default function Study() {
             >
                 <Text
                     style={{
-                        fontFamily: "PlayfairDisplay",
+                        fontFamily: "SpaceMono",
                         fontSize: 64,
                         color: "white",
                     }}
@@ -73,7 +86,7 @@ export default function Study() {
                     {isRunning ? "Stop & Reset" : "Start Studying"}
                 </Text>
             </TouchableOpacity>
-            <Text style={{fontFamily: "PlayfairDisplay" }}>Number of sets completed: 0</Text>
+            <Text style={{fontFamily: "PlayfairDisplay", marginTop: 20 }}>Number of sets completed: {setsCompleted}</Text>
         </View>
     );
 }
