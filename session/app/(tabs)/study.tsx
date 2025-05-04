@@ -54,52 +54,6 @@ export default function Study() {
     const minutes = String(Math.floor(timer / 60)).padStart(2, "0");
     const seconds = String(timer % 60).padStart(2, "0");
 
-    // return (
-    //     <View
-    //     style={{
-    //         flex: 1,
-    //         justifyContent: "center",
-    //         alignItems: "center",
-    //     }}
-    //     >
-    //         <View
-    //             style={{
-    //                 width: 250,
-    //                 height: 250,
-    //                 borderRadius: 125,
-    //                 backgroundColor: "orange",
-    //                 justifyContent: "center",
-    //                 alignItems: "center",
-    //             }}
-    //         >
-    //             <Text
-    //                 style={{
-    //                     fontFamily: "SpaceMono",
-    //                     fontSize: 64,
-    //                     color: "white",
-    //                 }}
-    //             >
-    //                 {Math.floor(timer / 60)
-    //                     .toString()
-    //                     .padStart(2, "0")}:
-    //                 {(timer % 60).toString().padStart(2, "0")}
-    //             </Text>
-    //         </View>
-    //         <TouchableOpacity onPress={handleToggleTimer}>
-    //             <Text
-    //                 style={{
-    //                     fontFamily: "PlayfairDisplay",
-    //                     padding: 10,
-    //                     fontSize: 18,
-    //                 }}
-    //             >
-    //                 {isRunning ? "Stop & Reset" : "Start Studying"}
-    //             </Text>
-    //         </TouchableOpacity>
-    //         <Text style={{fontFamily: "PlayfairDisplay", marginTop: 20 }}>Number of sets completed: {setsCompleted}</Text>
-    //     </View>
-    // );
-
     return (
         <View style={styles.container}>
             <Text style={styles.phaseText}>
