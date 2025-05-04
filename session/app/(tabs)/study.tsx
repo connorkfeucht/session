@@ -1,8 +1,12 @@
-import { Text, View, TouchableOpacity } from "react-native";
+import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
 import { useState, useEffect } from "react";
+import styles from "../styles";
 
 export default function Study() {
-    const [timer, setTimer] = useState(60*25); // initial countdown value (60 seconds)
+    const WORK_DURATION = 25 * 60;
+    const BREAK_DURATION = 5 * 60;
+
+    const [timer, setTimer] = useState(WORK_DURATION); // initial countdown value (60 seconds)
     const [isRunning, setIsRunning] = useState(false); // tracks if the timer is running
     const [isWorkPhase, setIsWorkPhase] = useState(true);
     const [setsCompleted, setSetsCompleted] = useState(0);
@@ -17,16 +21,16 @@ export default function Study() {
         if (isRunning && timer > 0) {
             interval = setInterval(() => {
                 setTimer((prevTimer) => prevTimer - 1);
-            }, 0.00001); // decrease timer by 1 every second
+            }, 0.00001); // decrease timer by 1 every second, normally 1000
         } else if (isRunning && timer === 0) {
             clearInterval(interval); // clear interval when timer reaches 0
             
             if (isWorkPhase) { // if timer is 0 and just finished work phase
                 setSetsCompleted((prevSets) => prevSets + 1);
-                setTimer(60*5);
+                setTimer(BREAK_DURATION);
                 setIsWorkPhase(false);
             } else { // end the break
-                setTimer(60*25);
+                setTimer(WORK_DURATION);
                 setIsWorkPhase(true);
             }
         }
@@ -40,55 +44,86 @@ export default function Study() {
     const handleToggleTimer = () => {
         if (isRunning) {
             setIsRunning(false); // stop timer
-            setTimer(isWorkPhase ? 60*25 : 60*5); // reset timer
+            setTimer(isWorkPhase ? WORK_DURATION : BREAK_DURATION); // reset timer
         } else {
             setIsRunning(true); // start timer
         }
     }
+    const totalTime = isWorkPhase ? WORK_DURATION : BREAK_DURATION;
+    const progress = ((totalTime - timer) / totalTime) * 100;
+    const minutes = String(Math.floor(timer / 60)).padStart(2, "0");
+    const seconds = String(timer % 60).padStart(2, "0");
+
+    // return (
+    //     <View
+    //     style={{
+    //         flex: 1,
+    //         justifyContent: "center",
+    //         alignItems: "center",
+    //     }}
+    //     >
+    //         <View
+    //             style={{
+    //                 width: 250,
+    //                 height: 250,
+    //                 borderRadius: 125,
+    //                 backgroundColor: "orange",
+    //                 justifyContent: "center",
+    //                 alignItems: "center",
+    //             }}
+    //         >
+    //             <Text
+    //                 style={{
+    //                     fontFamily: "SpaceMono",
+    //                     fontSize: 64,
+    //                     color: "white",
+    //                 }}
+    //             >
+    //                 {Math.floor(timer / 60)
+    //                     .toString()
+    //                     .padStart(2, "0")}:
+    //                 {(timer % 60).toString().padStart(2, "0")}
+    //             </Text>
+    //         </View>
+    //         <TouchableOpacity onPress={handleToggleTimer}>
+    //             <Text
+    //                 style={{
+    //                     fontFamily: "PlayfairDisplay",
+    //                     padding: 10,
+    //                     fontSize: 18,
+    //                 }}
+    //             >
+    //                 {isRunning ? "Stop & Reset" : "Start Studying"}
+    //             </Text>
+    //         </TouchableOpacity>
+    //         <Text style={{fontFamily: "PlayfairDisplay", marginTop: 20 }}>Number of sets completed: {setsCompleted}</Text>
+    //     </View>
+    // );
 
     return (
-        <View
-        style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-        }}
-        >
-            <View
-                style={{
-                    width: 250,
-                    height: 250,
-                    borderRadius: 125,
-                    backgroundColor: "orange",
-                    justifyContent: "center",
-                    alignItems: "center",
-                }}
-            >
-                <Text
-                    style={{
-                        fontFamily: "SpaceMono",
-                        fontSize: 64,
-                        color: "white",
-                    }}
-                >
-                    {Math.floor(timer / 60)
-                        .toString()
-                        .padStart(2, "0")}:
-                    {(timer % 60).toString().padStart(2, "0")}
-                </Text>
+        <View style={styles.container}>
+            <Text style={styles.phaseText}>
+                {isWorkPhase ? "WORK PHASE" : "BREAK PHASE"}
+            </Text>
+
+            <Text style={styles.timerText}>
+                {minutes}:{seconds}
+            </Text>
+
+            <View style={styles.progressContainer}>
+                <View style={[styles.progressBar, { width: `${progress}%` }]} />
             </View>
-            <TouchableOpacity onPress={handleToggleTimer}>
-                <Text
-                    style={{
-                        fontFamily: "PlayfairDisplay",
-                        padding: 10,
-                        fontSize: 18,
-                    }}
-                >
-                    {isRunning ? "Stop & Reset" : "Start Studying"}
+
+            <TouchableOpacity style={styles.button} onPress={handleToggleTimer}>
+                <Text style={styles.buttonText}>
+                    {isRunning ? "STOP & RESET" : isWorkPhase ? "START WORK" : "START BREAK"}
                 </Text>
             </TouchableOpacity>
-            <Text style={{fontFamily: "PlayfairDisplay", marginTop: 20 }}>Number of sets completed: {setsCompleted}</Text>
+
+            <Text style={styles.statsText}>
+                Sets completed this seshn: {setsCompleted}
+            </Text>
         </View>
     );
 }
+
