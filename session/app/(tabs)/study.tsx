@@ -1,8 +1,10 @@
-import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
+import { Text, View, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";
 import styles from "../styles";
+import { useRouter } from "expo-router";
 
 export default function Study() {
+    const router = useRouter();
     const WORK_DURATION = 25 * 60;
     const BREAK_DURATION = 5 * 60;
 
@@ -11,7 +13,6 @@ export default function Study() {
     const [isWorkPhase, setIsWorkPhase] = useState(true);
     const [setsCompleted, setSetsCompleted] = useState(0);
 
-    // TODO: Need to do UI Polishing
     // TODO: Need to have section that starts a study session before timer shows up
     // TODO: Need to save statistics for a study session 
 
@@ -51,6 +52,14 @@ export default function Study() {
             setIsRunning(true); // start timer
         }
     }
+
+    const handlePostSeshn = () => {
+        router.push({
+            pathname: "../posting",
+            params: { setsCompleted: `${setsCompleted}` },
+        });
+    }
+
     const totalTime = isWorkPhase ? WORK_DURATION : BREAK_DURATION;
     const progress = ((totalTime - timer) / totalTime) * 100;
     const minutes = String(Math.floor(timer / 60)).padStart(2, "0");
@@ -76,7 +85,7 @@ export default function Study() {
                 </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={handlePostSeshn}>
                 <Text style={styles.buttonText}>
                     END SESHN
                 </Text>
