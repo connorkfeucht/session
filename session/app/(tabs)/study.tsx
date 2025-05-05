@@ -15,6 +15,8 @@ export default function Study() {
     // TODO: Need to have section that starts a study session before timer shows up
     // TODO: Need to save statistics for a study session 
 
+    // TODO: Create function to reroute user to "posting" page on press of end seshn button
+
     useEffect(() => {
         let interval: NodeJS.Timeout | null = null;
 
@@ -71,6 +73,12 @@ export default function Study() {
             <TouchableOpacity style={styles.button} onPress={handleToggleTimer}>
                 <Text style={styles.buttonText}>
                     {isRunning ? "STOP & RESET" : isWorkPhase ? "START WORK" : "START BREAK"}
+                </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.button}>
+                <Text style={styles.buttonText}>
+                    END SESHN
                 </Text>
             </TouchableOpacity>
 

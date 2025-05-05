@@ -28,19 +28,19 @@ export default StyleSheet.create({
     backgroundColor: "#eee",
     borderRadius: 2,
     overflow: "hidden",
-    marginBottom: 32,
+    marginBottom: 128,
   },
   progressBar: {
     height: "100%",
     backgroundColor: "#111",
   },
   button: {
-    width: "60%",
+    width: "50%",
     paddingVertical: 12,
     borderRadius: 6,
     borderWidth: 1,
     borderColor: "#111",
-    marginBottom: 24,
+    marginBottom: 12,
   },
   buttonText: {
     textAlign: "center",
