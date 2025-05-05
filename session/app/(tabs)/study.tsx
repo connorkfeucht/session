@@ -54,6 +54,7 @@ export default function Study() {
     }
 
     const handlePostSeshn = () => {
+        setSetsCompleted(0); // reset setsCompleted
         router.push({
             pathname: "../posting",
             params: { setsCompleted: `${setsCompleted}` },
