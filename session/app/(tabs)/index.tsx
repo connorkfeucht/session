@@ -1,6 +1,7 @@
 import { Text, View } from "react-native";
 
 // TODO: Show self and other's study seshns that they've posted. 
+// TODO: use flatlist for scrolling through posts
 export default function Index() {
   return (
     <View
