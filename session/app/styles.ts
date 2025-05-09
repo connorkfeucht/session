@@ -1,4 +1,8 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
+
+const { width } = Dimensions.get("window");
+const THUMB_SIZE = (width - 40 - 16) / 2; 
+// 40 = horizontal padding; 16 = space between columns
 
 export default StyleSheet.create({
   container: {
@@ -52,5 +56,47 @@ export default StyleSheet.create({
   statsText: {
     fontSize: 14,
     color: "#555",
+  },
+
+  // new profile-specific styles
+  profileHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 24,
+  },
+  avatar: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: "#eee",
+    marginRight: 16,
+  },
+  profileInfo: {
+    flex: 1,
+  },
+  username: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#111",
+    marginBottom: 4,
+    fontFamily: "PlayfairDisplay",
+  },
+  bio: {
+    fontSize: 14,
+    color: "#555",
+    marginBottom: 8,
+  },
+
+  // reuse statsText for “X Completed Seshns”
+
+  activityRow: {
+    justifyContent: "space-between",
+    marginBottom: 16,
+  },
+  activityThumb: {
+    width: THUMB_SIZE,
+    height: THUMB_SIZE,
+    borderRadius: 8,
+    backgroundColor: "#eee",
   },
 });

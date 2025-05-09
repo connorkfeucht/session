@@ -24,7 +24,7 @@ export default function Study() {
         if (isRunning && timer > 0) {
             interval = setInterval(() => {
                 setTimer((prevTimer) => prevTimer - 1);
-            }, 0.00001); // decrease timer by 1 every second, normally 1000
+            }, 1000); // decrease timer by 1 every second, normally 1000
         } else if (isRunning && timer === 0) {
             clearInterval(interval); // clear interval when timer reaches 0
             
