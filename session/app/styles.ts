@@ -18,13 +18,14 @@ export default StyleSheet.create({
     color: "#555",
     marginBottom: 8,
     letterSpacing: 1,
+    fontFamily: "PlayfairDisplay",
   },
   timerText: {
     fontSize: 72,
     fontWeight: "300",
     color: "#111",
     marginVertical: 16,
-    fontFamily: "SpaceMono",
+    fontFamily: "PlayfairDisplay",
   },
   progressContainer: {
     width: "80%",
@@ -56,6 +57,7 @@ export default StyleSheet.create({
   statsText: {
     fontSize: 14,
     color: "#555",
+    fontFamily: "PlayfairDisplay",
   },
 
   // new profile-specific styles
@@ -79,12 +81,13 @@ export default StyleSheet.create({
     fontWeight: "600",
     color: "#111",
     marginBottom: 4,
-    fontFamily: "PlayfairDisplay",
+    fontFamily: "PlayfairDisplayItalic",
   },
   bio: {
     fontSize: 14,
     color: "#555",
     marginBottom: 8,
+    fontFamily: "PlayfairDisplay",
   },
 
   // reuse statsText for “X Completed Seshns”

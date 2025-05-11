@@ -5,6 +5,8 @@ import {
   FlatList,
   TouchableOpacity, 
 } from "react-native";
+import { useRouter } from "expo-router";
+import { supabase } from "../../lib/supabase";
 import styles from "../styles";
 
 // DUMMY USER INFO
@@ -24,6 +26,18 @@ const ACTIVITIES = Array.from({ length: 6 }).map((_, i) => ({
 
 
 export default function Profile() {
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error("Error signing out: ", error.message);
+    } else {
+      // drop back to the root index
+      router.replace("/");
+    }
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.profileHeader}>
@@ -49,8 +63,8 @@ export default function Profile() {
       )}
     />
 
-    <TouchableOpacity style={styles.button}>
-      <Text style={styles.buttonText}>All Activities</Text>
+    <TouchableOpacity style={styles.button} onPress={handleSignOut}>
+      <Text style={styles.buttonText}>Sign out</Text>
     </TouchableOpacity>
 
     </View>
