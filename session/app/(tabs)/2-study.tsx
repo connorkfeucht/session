@@ -53,7 +53,7 @@ export default function Study() {
         }
     }
 
-    const handlePostSeshn = () => {
+    const handleEndSeshn = () => {
         setSetsCompleted(0); // reset setsCompleted
         router.push({
             pathname: "../posting",
@@ -86,7 +86,7 @@ export default function Study() {
                 </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={handlePostSeshn}>
+            <TouchableOpacity style={styles.button} onPress={handleEndSeshn}>
                 <Text style={styles.buttonText}>
                     END SESHN
                 </Text>
