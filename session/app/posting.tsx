@@ -31,20 +31,20 @@ export default function Posting() {
     }
     // TODO: Improve UI for this page, add productivity scale
     return (
-    <View style={styles.container}>
-        <Text style={{...styles.statsText, marginBottom: 20}}>You completed {setsCompleted} sets this seshn!</Text>
-        <Text style={styles.statsText}>Title</Text>
+    <View style={styles.containerTwo}>
+        <Text style={{...styles.statsText, marginTop: 20, marginBottom: 20}}>You completed {setsCompleted} sets this seshn!</Text>
+        {/* <Text style={styles.statsText}>Title</Text> */}
         <TextInput
             value={title}
             onChangeText={setTitle}
             placeholder={"Enter a Title..."}
             placeholderTextColor={"#8E8E93"}
-            style={{...styles.button,
+            style={{...styles.textBox,
                 borderBottomWidth: 1,
                 marginBottom: 20,
                 padding: 4,}}
         />
-        <Text style={styles.statsText}>Images</Text>
+        {/* <Text style={styles.statsText}>Images</Text> */}
         <TouchableOpacity
         onPress={pickImage}
         style={{
@@ -66,20 +66,20 @@ export default function Posting() {
         )}
         </TouchableOpacity>
 
-        <Text style={styles.statsText}>Caption</Text>
+        {/* <Text style={styles.statsText}>Caption</Text> */}
         <TextInput
             value={caption}
             onChangeText={setCaption}
             placeholder="Write a caption…"
             placeholderTextColor="#AAA"
             multiline
-            style={{...styles.button,
+            style={{...styles.textBox,
                 borderBottomWidth: 1,
                 marginBottom: 20,
                 padding: 4,}}
         />
 
-        <Text style={styles.statsText}>Location</Text>
+        {/* <Text style={styles.statsText}>Location</Text> */}
         <TouchableOpacity
             onPress={() => {}}
             style={{
@@ -87,7 +87,6 @@ export default function Posting() {
             alignItems: "center",
             borderBottomWidth: 1,
             borderColor: "#E5E5EA",
-            paddingVertical: 10,
             marginBottom: 20,
             }}
         >

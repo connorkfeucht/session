@@ -12,6 +12,13 @@ export default StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 20,
   },
+  containerTwo: {
+    flex: 1,
+    backgroundColor: "#fff",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    paddingHorizontal: 20,
+  },
   phaseText: {
     fontSize: 14,
     fontWeight: "500",
@@ -101,5 +108,13 @@ export default StyleSheet.create({
     height: THUMB_SIZE,
     borderRadius: 8,
     backgroundColor: "#eee",
+  },
+  textBox: {
+    width: "100%",
+    paddingVertical: 12,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: "#111",
+    marginBottom: 12,
   },
 });
