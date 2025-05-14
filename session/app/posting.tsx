@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Slider from "@react-native-community/slider";
 import styles from "./styles";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { supabase } from "@/lib/supabase";
 
 export default function Posting() {
     const router = useRouter();
@@ -22,8 +23,21 @@ export default function Posting() {
         
     // }, []);
 
-    const handlePostSeshn = () => {
+    const handlePostSeshn = async () => {
         // TODO: create activity in supabase
+        const { data, error } = await supabase
+            .from('activities')
+            .insert([{
+                uid: (await supabase.auth.getSession()).data.session?.user.id,
+                description: caption, 
+                is_private: false, 
+                sets_completed: setsCompleted,
+                location: location, 
+            }]) // TODO: Get the images[] to insert into the table as well
+        
+        if (error) throw error;
+        console.log("insert ->", {data, error})
+
         // TODO: post activity to home.tsx
         router.push({
             pathname: "/1-home"
