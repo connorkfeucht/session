@@ -31,18 +31,14 @@ export default function Posting() {
         }
     }
 
-    // useEffect(() => {
-        
-    // }, []);
-
     const handlePostSeshn = async () => {
-        // TODO: create activity in supabase
+        // Creating Activity in Supabase
         const { data, error } = await supabase
             .from('activities')
             .insert([{
                 uid: (await supabase.auth.getSession()).data.session?.user.id,
                 description: caption, 
-                is_private: false, 
+                is_private: isPrivate, 
                 sets_completed: setsCompleted,
                 location: location, 
             }]) // TODO: Get the images[] to insert into the table as well
@@ -50,12 +46,11 @@ export default function Posting() {
         if (error) throw error;
         console.log("insert ->", {data, error})
 
-        // TODO: post activity to home.tsx
         router.push({
             pathname: "/1-home"
         });
     }
-    // TODO: Improve UI for this page, add productivity scale
+    // TODO: Add productivity scale
     return (
     <View style={styles.containerTwo}>
         <Text style={{...styles.statsText, marginTop: 20, marginBottom: 20}}>You completed {setsCompleted} sets this seshn!</Text>
