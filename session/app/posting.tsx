@@ -1,4 +1,4 @@
-import { Text, View, TouchableOpacity, ScrollView, Image, TextInput } from "react-native";
+import { Text, View, TouchableOpacity, ScrollView, Image, TextInput, Switch } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import Slider from "@react-native-community/slider";
@@ -14,9 +14,21 @@ export default function Posting() {
     const [caption, setCaption] = useState("");
     const [location, setLocation] = useState(""); // TODO: make a proper location function
     const [productivity, setProductivity] = useState(50);
+    const [isPrivate, setIsPrivate] = useState(false);
     
     const pickImage = () => {
         // TODO: make image selecting function
+    }
+
+    const toggleSwitch = () => {
+        if (isPrivate) {
+            setIsPrivate(false);
+            // console.log("public activity");
+        } else {
+            setIsPrivate(true);
+            // console.log("private activity");
+
+        }
     }
 
     // useEffect(() => {
@@ -94,25 +106,27 @@ export default function Posting() {
         />
 
         {/* <Text style={styles.statsText}>Location</Text> */}
-        <TouchableOpacity
-            onPress={() => {}}
-            style={{
-            flexDirection: "row",
-            alignItems: "center",
-            borderBottomWidth: 1,
-            borderColor: "#E5E5EA",
-            marginBottom: 20,
-            }}
-        >
-            <Ionicons name="location-outline" size={20} color="#555" />
-            <Text style={{ ...styles.statsText, marginLeft: 8 }}>
-            {location || "Add location"}
-            </Text>
-        </TouchableOpacity>
+        <TextInput
+            value={location}
+            onChangeText={setLocation}
+            placeholder="Set your Location…"
+            placeholderTextColor="#AAA"
+            multiline
+            style={{...styles.textBox,
+                borderBottomWidth: 1,
+                marginBottom: 20,
+                padding: 4,}}
+        />
+
+        {/* Private switch */}
+        <View style={styles.row}>
+            <Text style={styles.statsText}> Private Activity</Text>
+            <Switch onValueChange={toggleSwitch} value={isPrivate} />
+        </View>
 
         { /* TODO: Productivity Scale Here */}
 
-        <TouchableOpacity style={styles.button} onPress={handlePostSeshn}>
+        <TouchableOpacity style={{...styles.button, alignSelf: "center"}} onPress={handlePostSeshn}>
             <Text style={styles.buttonText}>FINISH</Text>
         </TouchableOpacity>
     </View>

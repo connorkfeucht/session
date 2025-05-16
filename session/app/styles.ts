@@ -117,4 +117,12 @@ export default StyleSheet.create({
     borderColor: "#111",
     marginBottom: 12,
   },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "100%",
+    // paddingHorizontal: 20,
+    marginBottom: 20,
+  }
 });
