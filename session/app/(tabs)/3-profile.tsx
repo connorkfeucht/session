@@ -123,7 +123,7 @@ export default function Profile() {
         </View>
       </View>
     
-      <FlatList
+      {/* <FlatList
         data={activities ?? []}
         keyExtractor={(item) => item.aid.toString()}
         numColumns={1}
@@ -157,7 +157,36 @@ export default function Profile() {
             </View>
           );
         }}
+      /> */}
+
+      <FlatList
+        data={activities ?? []}
+        keyExtractor={(item) => item.aid.toString()}
+        numColumns={1}
+        contentContainerStyle={{ padding: 20 }}
+        renderItem={({ item }) => {
+          const uri =
+            Array.isArray(item.images) && item.images.length > 0
+              ? item.images[0]
+              : null;
+
+          return (
+            <View style={styles.activityCard}>
+              {uri ? (
+                <Image source={{ uri }} style={styles.activityImage} />
+              ) : (
+                <View style={styles.activityImagePlaceholder}>
+                  <Text style={styles.statsText}>No Image</Text>
+                </View>
+              )}
+              <Text style={styles.activityDescription}>
+                {item.description}
+              </Text>
+            </View>
+          );
+        }}
       />
+
 
 
       <TouchableOpacity style={styles.button} onPress={handleSignOut}>

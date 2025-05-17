@@ -37,6 +37,7 @@ export default function Posting() {
             .from('activities')
             .insert([{
                 uid: (await supabase.auth.getSession()).data.session?.user.id,
+                title: title,
                 description: caption, 
                 is_private: isPrivate, 
                 sets_completed: setsCompleted,
