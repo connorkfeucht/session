@@ -47,7 +47,7 @@ export default StyleSheet.create({
     backgroundColor: "#111",
   },
   button: {
-    width: "50%",
+    width: "45%",
     paddingVertical: 12,
     borderRadius: 6,
     borderWidth: 1,
@@ -71,7 +71,12 @@ export default StyleSheet.create({
   profileHeader: {
     flexDirection: "row",
     alignItems: "center",
-    marginVertical: 24,
+    marginVertical: 20,
+    borderWidth: 1,
+    borderRadius: 6,
+    paddingVertical: 12,
+    borderColor: "#111",
+    paddingHorizontal: 12,
   },
   avatar: {
     width: 80,
@@ -93,7 +98,7 @@ export default StyleSheet.create({
   bio: {
     fontSize: 14,
     color: "#555",
-    marginBottom: 8,
+    marginBottom: 4,
     fontFamily: "PlayfairDisplay",
   },
 
@@ -128,37 +133,4 @@ export default StyleSheet.create({
     marginBottom: 16,
     alignItems: "center", // or flex-start if you want them left-aligned
   },
-
-  activityCard: {
-    backgroundColor: "#FFF",
-    borderRadius: 12,
-    overflow: "hidden",
-    marginBottom: 20,
-    // iOS shadow
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 4 },
-    // Android elevation
-    elevation: 4,
-  },
-  activityImage: {
-    width: "100%",
-    height: 200,
-    resizeMode: "cover",
-  },
-  activityImagePlaceholder: {
-    width: "100%",
-    height: 200,
-    backgroundColor: "#EEE",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  activityDescription: {
-    padding: 12,
-    fontSize: 16,
-    color: "#333",
-    fontFamily: "PlayfairDisplay",
-  },
-
 });

@@ -2,7 +2,7 @@ import {
   Text, 
   View,
   Image,
-  FlatList,
+  ScrollView,
   TouchableOpacity,
   ActivityIndicator, 
 } from "react-native";
@@ -10,6 +10,8 @@ import { useRouter } from "expo-router";
 import { useState, useEffect } from "react";
 import { supabase } from "../../lib/supabase";
 import styles from "../styles";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+
 
 type ProfileRow = {
   id: string,
@@ -22,6 +24,7 @@ type ProfileRow = {
 
 type ActivitiesRow = {
   aid: number,
+  title: string,
   created_at: string,
   description: string,
   is_private: boolean,
@@ -66,7 +69,7 @@ export default function Profile() {
 
         const { data: activitiesData, error: activitiesError } = await supabase
         .from("activities")
-        .select("aid, created_at, description, is_private, sets_completed, location, images")
+        .select("aid, title, created_at, description, is_private, sets_completed, location, images")
         .eq("uid", userId);
 
         if (activitiesError) throw activitiesError;
@@ -116,82 +119,21 @@ export default function Profile() {
         <View style={styles.profileInfo}>
           <View style={{...styles.row, marginBottom: 0}}>
             <Text style={styles.username}>@{profile.username.toLowerCase()}</Text>
-            <TouchableOpacity><Text style={styles.statsText}>Friends</Text></TouchableOpacity>
+            <TouchableOpacity><FontAwesome name="users" size={24}/></TouchableOpacity>
           </View>
           <Text style={styles.bio}>{profile.bio}</Text>
           <Text style={styles.statsText}>{profile.seshns_completed} Completed Seshns</Text>
         </View>
       </View>
-    
-      {/* <FlatList
-        data={activities ?? []}
-        keyExtractor={(item) => item.aid.toString()}
-        numColumns={1}
-        contentContainerStyle={{ paddingBottom: 20 }}
-        renderItem={({ item }) => {
-          // make sure images is an array with at least one entry
-          const uri =
-            Array.isArray(item.images) && item.images.length > 0
-              ? item.images[0]
-              : null;
 
-          return (
-            <View style={styles.singleActivityRow}>
-              {uri ? (
-                <Image
-                  source={{ uri }}
-                  style={styles.activityThumb}
-                />
-              ) : (
-                // fallback box if no image
-                <View
-                  style={[
-                    styles.activityThumb,
-                    { justifyContent: "center", alignItems: "center" },
-                  ]}
-                >
-                  <Text style={styles.statsText}>No Image</Text>
-                </View>
-              )}
-              <Text style={styles.statsText}>{item.description}</Text>
-            </View>
-          );
-        }}
-      /> */}
-
-      <FlatList
-        data={activities ?? []}
-        keyExtractor={(item) => item.aid.toString()}
-        numColumns={1}
-        contentContainerStyle={{ padding: 20 }}
-        renderItem={({ item }) => {
-          const uri =
-            Array.isArray(item.images) && item.images.length > 0
-              ? item.images[0]
-              : null;
-
-          return (
-            <View style={styles.activityCard}>
-              {uri ? (
-                <Image source={{ uri }} style={styles.activityImage} />
-              ) : (
-                <View style={styles.activityImagePlaceholder}>
-                  <Text style={styles.statsText}>No Image</Text>
-                </View>
-              )}
-              <Text style={styles.activityDescription}>
-                {item.description}
-              </Text>
-            </View>
-          );
-        }}
-      />
-
-
-
-      <TouchableOpacity style={styles.button} onPress={handleSignOut}>
-        <Text style={styles.buttonText}>Sign out</Text>
-      </TouchableOpacity>
+      <View style={styles.row}>
+        <TouchableOpacity style={styles.button} onPress={handleSignOut}>
+          <Text style={styles.buttonText}>Sign out</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => router.push({pathname: "../activities"})}>
+          <Text style={styles.buttonText}>See Activities</Text>
+        </TouchableOpacity>
+      </View>
 
     </View>
   );
