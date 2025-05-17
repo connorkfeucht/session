@@ -123,5 +123,9 @@ export default StyleSheet.create({
     alignItems: "center",
     width: "100%",
     marginBottom: 20,
-  }
+  },
+  singleActivityRow: {
+    marginBottom: 16,
+    alignItems: "center", // or flex-start if you want them left-aligned
+  },
 });
