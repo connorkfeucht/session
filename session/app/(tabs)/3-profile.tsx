@@ -111,7 +111,6 @@ export default function Profile() {
     );
   }
 
-  // TODO: Make Friends button an icon instead of text
   return (
     <View style={styles.container}>
       <View style={styles.profileHeader}>
@@ -119,7 +118,7 @@ export default function Profile() {
         <View style={styles.profileInfo}>
           <View style={{...styles.row, marginBottom: 0}}>
             <Text style={styles.username}>@{profile.username.toLowerCase()}</Text>
-            <TouchableOpacity><FontAwesome name="users" size={24}/></TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push({pathname: "../friends"})}><FontAwesome name="users" size={24}/></TouchableOpacity>
           </View>
           <Text style={styles.bio}>{profile.bio}</Text>
           <Text style={styles.statsText}>{profile.seshns_completed} Completed Seshns</Text>
