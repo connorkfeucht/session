@@ -14,9 +14,6 @@ export default function Study() {
     const [setsCompleted, setSetsCompleted] = useState(0);
 
     // TODO: Need to have section that starts a study session before timer shows up
-    // TODO: Need to save statistics for a study session 
-
-    // TODO: Create function to reroute user to "posting" page on press of end seshn button
 
     useEffect(() => {
         let interval: NodeJS.Timeout | null = null;

@@ -15,7 +15,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 type ProfileRow = {
   id: string,
-  username: string, // TODO: in supabase this is currently nullable, need to change
+  username: string,
   full_name: string | null,
   avatar_url: string | null;
   bio: string | null;
@@ -32,14 +32,6 @@ type ActivitiesRow = {
   location: string,
   images: string[],
 }
-
-// DUMMY DATA UNTIL HOOKED UP TO DB
-// TODO: FETCH REAL ACTIVITES AND STORE THEM IN STATE
-// const ACTIVITIES = Array.from({ length: 6 }).map((_, i) => ({
-//   id: String(i),
-//   uri: `https://via.placeholder.com/120?text=${i + 1}`, 
-// }));
-
 
 export default function Profile() {
   const router = useRouter();
