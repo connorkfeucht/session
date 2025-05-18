@@ -68,9 +68,9 @@ export default function Profile() {
         setProfile(profileData);
 
         const { data: activitiesData, error: activitiesError } = await supabase
-        .from("activities")
-        .select("aid, title, created_at, description, is_private, sets_completed, location, images")
-        .eq("uid", userId);
+          .from("activities")
+          .select("aid, title, created_at, description, is_private, sets_completed, location, images")
+          .eq("uid", userId);
 
         if (activitiesError) throw activitiesError;
         setActivities(activitiesData);

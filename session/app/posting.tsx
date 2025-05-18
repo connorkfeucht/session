@@ -32,8 +32,15 @@ export default function Posting() {
     }
 
     const handlePostSeshn = async () => {
+        // getting session
+        const {
+            data: { session },
+        } = await supabase.auth.getSession();
+        const userId = session?.user.id;
+        if (!userId) throw new Error("No active session");
+
         // Creating Activity in Supabase
-        const { data, error } = await supabase
+        const { data: activityData, error: insertError } = await supabase
             .from('activities')
             .insert([{
                 uid: (await supabase.auth.getSession()).data.session?.user.id,
@@ -44,9 +51,27 @@ export default function Posting() {
                 location: location, 
             }]) // TODO: Get the images[] to insert into the table as well
         
-        if (error) throw error;
-        console.log("insert ->", {data, error})
+        if (insertError) throw insertError;
+        console.log("insert ->", {activityData, insertError})
 
+        // 1) fetching seshns_completed
+        const { data: profileRow, error: fetchError } = await supabase
+            .from("profiles")
+            .select("seshns_completed")
+            .eq("id", userId)
+            .single();
+
+        if (fetchError) throw fetchError;
+        
+        const currentCount = profileRow?.seshns_completed ?? 0;
+
+        // 2) write it back +1
+        const { error: updateError } = await supabase
+            .from("profiles")
+            .update({ seshns_completed: currentCount + 1 })
+            .eq("id", userId);
+
+        // go back to home page
         router.push({
             pathname: "/1-home"
         });
