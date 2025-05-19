@@ -10,6 +10,7 @@ export default function RootLayout() {
     PlayfairDisplay: require('../assets/fonts/PlayfairDisplay-VariableFont_wght.ttf'),
     PlayfairDisplayItalic: require('../assets/fonts/PlayfairDisplay-Italic-VariableFont_wght.ttf'),
   });
+  const noBackArrow = ["1-home", "2-study", "3-profile", "posting"];
 
   useEffect (() => {
     if (loaded) {
@@ -23,10 +24,11 @@ export default function RootLayout() {
 
   return (
     <Stack
-      screenOptions={{
+      screenOptions={({ route }) => ({
         headerTitle: "Seshn",
-        headerTitleStyle: { fontFamily: "PlayfairDisplay" }, // TODO: Make this text larger and more bold
-      }}
+        headerTitleStyle: { fontFamily: "PlayfairDisplay", fontSize: 24, fontWeight: "700" },
+        headerBackVisible: !noBackArrow.includes(route.name),
+      })}
     />
   );
 }

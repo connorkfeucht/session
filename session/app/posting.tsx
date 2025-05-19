@@ -72,7 +72,7 @@ export default function Posting() {
             .eq("id", userId);
 
         // go back to home page
-        router.push({
+        router.replace({
             pathname: "/1-home"
         });
     }
