@@ -1,17 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   View,
   Text,
   ScrollView,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import styles from "../styles";
+import { supabase } from "../../lib/supabase";
+
 
 type ActivityItem = {
-  id: string;
+  aid: string;
   username: string;
+  uid: string;
   avatar_url: string | null;
   title: string;
   description: string;
@@ -24,7 +28,7 @@ type ActivityItem = {
 
 const DUMMY_ACTIVITIES: ActivityItem[] = [
   {
-    id: "1",
+    aid: "1",
     username: "johndoe",
     avatar_url: null,
     title: "Deep Work Sprint",
@@ -36,7 +40,7 @@ const DUMMY_ACTIVITIES: ActivityItem[] = [
     images: ["https://via.placeholder.com/300"],
   },
   {
-    id: "2",
+    aid: "2",
     username: "janedoe",
     avatar_url: null,
     title: "Reading Time",
@@ -48,7 +52,7 @@ const DUMMY_ACTIVITIES: ActivityItem[] = [
     images: [],
   },
   {
-    id: "3",
+    aid: "3",
     username: "connorkfeucht",
     avatar_url: null,
     title: "Working on app",
@@ -62,19 +66,52 @@ const DUMMY_ACTIVITIES: ActivityItem[] = [
 ];
 
 export default function Home() {
-  const [activities] = useState(DUMMY_ACTIVITIES); 
-  // TODO: Put in real data, data is displayed if friends and is_private = false
+  const [activities, setActivities] = useState<ActivityItem[] | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [profile, setProfile] = useState()
   // TODO: Mood and Productivity sliders
   // TODO: Order the activities by newest
   // TODO: write function for like button. hook up to backend
   // TODO: Add Images
+
+  useEffect(() => {
+    const loadFeed = async () => {
+      try {
+        // TODO: Put in real data, data is displayed if friends and is_private = false
+        // username, uid, and avatar_url for each ActivityItem is from profiles
+        // the rest is from activities, with mood and productivity being null for now.
+
+
+      } catch (error: any) {
+
+      } finally {
+        setLoading(false);
+      }
+    } 
+  }, [])
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large"/>
+      </View>
+    );
+  }
+
+  if (activities === null) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.statsText}> There are currently no activities to be displayed. </Text>
+      </View>
+    );
+  }
 
   return (
     <ScrollView style={{flex: 1, backgroundColor: "#fff",}} contentContainerStyle={{
       justifyContent: "center",
       alignItems: "center", }}>
       {activities.map((act) => (
-        <View key={act.id} style={styles.activityCard}>
+        <View key={act.aid} style={styles.activityCard}>
           {/* header: avatar + username */}
           <View style={styles.cardHeader}>
             <Image
