@@ -1,8 +1,9 @@
 import { Stack } from "expo-router";
 import { useFonts } from 'expo-font';
 import { useEffect } from "react";
-import { Text, View } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
+
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded] = useFonts({ // TODO: decide on a better font
@@ -17,10 +18,6 @@ export default function RootLayout() {
       SplashScreen.hideAsync();
     }
   }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
 
   return (
     <Stack

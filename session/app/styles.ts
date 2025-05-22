@@ -133,4 +133,74 @@ export default StyleSheet.create({
     marginBottom: 16,
     alignItems: "center", // or flex-start if you want them left-aligned
   },
+
+
+
+  // home.tsx
+
+  avatarSmall: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "#eee",
+    marginRight: 12,
+  },
+  activityCard: {
+    width: "100%",
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 20,
+    // iOS shadow
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    // Android elevation
+    elevation: 3,
+  },
+  cardHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 12,
+  },
+  activityTitle: {
+    fontFamily: "PlayfairDisplay",
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#111",
+    marginBottom: 6,
+  },
+  activityDesc: {
+    fontFamily: "PlayfairDisplay",
+    fontSize: 14,
+    color: "#555",
+    marginBottom: 12,
+  },
+  metaRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 12,
+  },
+  metaItem: {
+    fontFamily: "SpaceMono",
+    fontSize: 14,
+    color: "#777",
+  },
+  sliderRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 12,
+  },
+  activityThumbLarge: {
+    width: 120,
+    height: 120,
+    borderRadius: 8,
+    marginRight: 12,
+  },
+  likeButton: {
+    marginLeft: "auto",
+  }
+
 });
