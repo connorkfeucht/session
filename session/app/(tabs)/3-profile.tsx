@@ -2,9 +2,10 @@ import {
   Text, 
   View,
   Image,
-  ScrollView,
   TouchableOpacity,
   ActivityIndicator, 
+  Alert,
+  Platform,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { useState, useEffect } from "react";
@@ -77,6 +78,40 @@ export default function Profile() {
     loadProfile();
   }, []);
 
+  const handleEditUsername = () => {
+    Alert.prompt(
+      "Edit Username",
+      "Enter a new username:",
+      [
+        {text: "Cancel", style: "cancel"},
+        {
+          text: "Save", onPress: async (text) => {
+            if (!text?.trim()) {
+              Alert.alert("Username cannot be empty")
+              return
+            }
+            setLoading(true)
+            const { error } = await supabase
+              .from("profiles")
+              .update({username: text.trim()})
+              .eq("id", profile!.id)
+            setLoading(false)
+
+            if (error) {
+              Alert.alert("Error updating username: ", error.message)
+            } else {
+              setProfile((p) => (p ? { ...p, username: text.trim() } : p))
+              Alert.alert("Username successfully updated!")
+            }
+          }
+        }
+
+      ],
+      "plain-text",
+      profile?.username
+    )
+  }
+
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
@@ -109,7 +144,7 @@ export default function Profile() {
         <Image source={{uri: profile.avatar_url || "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg?20200418092106"}} style={styles.avatar}/>
         <View style={styles.profileInfo}>
           <View style={{...styles.row, marginBottom: 0}}>
-            <Text style={styles.username}>@{profile.username.toLowerCase()}</Text>
+            <Text style={styles.username} onPress={handleEditUsername}>@{profile.username.toLowerCase()}</Text>
             <TouchableOpacity onPress={() => router.push({pathname: "../friends"})}><FontAwesome name="users" size={24}/></TouchableOpacity>
           </View>
           <Text style={styles.bio}>{profile.bio}</Text>
