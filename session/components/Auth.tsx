@@ -33,18 +33,20 @@ export default function Auth() {
 
   async function signUpWithEmail() {
     setLoading(true)
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.signUp({
-      email: email,
-      password: password,
-    })
+    const response = await supabase.auth.signUp({ email, password })
+    const { data: { session }, error } = response
 
-    if (error) Alert.alert(error.message)
-    if (!session) Alert.alert('Please check your inbox for email verification!')
+    if (error) {
+      Alert.alert('Error signing up:', error.message)
+    } else if (!session) {
+      Alert.alert('No session returned! Check Supabase logs.')
+    } else {
+      // TODO: DO I NEED TO DO SOMETHING HERE?
+    }
+
     setLoading(false)
   }
+
 
   return (
     <View style={styles.container}>
