@@ -40,7 +40,6 @@ type DBActivityRow = {
 export default function Home() {
   const [activities, setActivities] = useState<ActivityItem[] | null>(null);
   const [loading, setLoading] = useState(true);
-  const [profile, setProfile] = useState()
   // TODO: Mood and Productivity sliders
   // TODO: Order the activities by newest
   // TODO: write function for like button. hook up to backend
