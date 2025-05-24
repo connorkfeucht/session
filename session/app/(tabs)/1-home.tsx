@@ -11,59 +11,31 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import styles from "../styles";
 import { supabase } from "../../lib/supabase";
 
-
-type ActivityItem = {
-  aid: string;
-  username: string;
-  uid: string;
-  avatar_url: string | null;
-  title: string;
-  description: string;
-  sets: number;
-  duration: string;
-  mood: number;
-  productivity: number;
-  images: string[];
+// for putting together the whole post
+type ActivityItem = { // "***" == not implemented yet
+  aid: string; // activities
+  username: string | null; // profiles
+  uid: string; // activities
+  avatar_url: string | null; // profiles
+  title: string; // activities
+  description: string; // activities
+  sets: number; // activities
+  duration: string | null; // calculate
+  mood: number | null; // activities***
+  productivity: number | null; // activities***
+  images: string[] | null; // activities***
 };
 
-const DUMMY_ACTIVITIES: ActivityItem[] = [
-  {
-    aid: "1",
-    username: "johndoe",
-    avatar_url: null,
-    title: "Deep Work Sprint",
-    description: "Knocked out the data model schema 🚀",
-    sets: 3,
-    duration: "1h 15m",
-    mood: 8,
-    productivity: 9,
-    images: ["https://via.placeholder.com/300"],
-  },
-  {
-    aid: "2",
-    username: "janedoe",
-    avatar_url: null,
-    title: "Reading Time",
-    description: "Digging into research on UX patterns.",
-    sets: 2,
-    duration: "50m",
-    mood: 7,
-    productivity: 8,
-    images: [],
-  },
-  {
-    aid: "3",
-    username: "connorkfeucht",
-    avatar_url: null,
-    title: "Working on app",
-    description: "Testing Testing 1 2 3! Working on the UI for my home.tsx page. Soon I'm going to replace this placeholder with real data from supabase!!!!",
-    sets: 4,
-    duration: "1h",
-    mood: 10,
-    productivity: 10,
-    images: [],
-  },
-];
+// for getting activity row from DB
+type DBActivityRow = {
+  aid: number;
+  uid: string;
+  title: string;
+  description: string;
+  sets_completed: number;
+  created_at: string;
+  location: string;
+};
 
 export default function Home() {
   const [activities, setActivities] = useState<ActivityItem[] | null>(null);
@@ -78,16 +50,53 @@ export default function Home() {
     const loadFeed = async () => {
       try {
         // TODO: Put in real data, data is displayed if friends and is_private = false
-        // username, uid, and avatar_url for each ActivityItem is from profiles
-        // the rest is from activities, with mood and productivity being null for now.
 
+        const { data: activitiesData, error: activitiesError } = await supabase
+          .from("activities")
+          .select("aid, uid, title, description, sets_completed, created_at, location")
+          .eq("is_private", false)
+
+        if (activitiesError) throw activitiesError;
+
+        const items: ActivityItem[] = await Promise.all(
+          (activitiesData || []).map(async (r) => {
+            const { data: profileData, error: profileError } = await supabase
+              .from("profiles")
+              .select("username, avatar_url")
+              .eq("id", r.uid)
+              .single()
+
+            if (profileError) throw profileError;
+
+            return {
+              aid: r.aid.toString(),
+              uid: r.uid,
+              username: profileData?.username || "unknown",
+              avatar_url: profileData?.avatar_url || null,
+              title: r.title,
+              description: r.description,
+              sets: r.sets_completed,
+              duration: null,        // TODO: fill in these values
+              mood: null,
+              productivity: null,
+              images: null,
+            };
+          })
+        );
+
+        setActivities(items);
 
       } catch (error: any) {
-
+        console.error("Error loading profile/activites:", error.message);
+        setActivities([]);
+        setLoading(false);
+        return;
       } finally {
         setLoading(false);
       }
-    } 
+    }
+
+    loadFeed();
   }, [])
 
   if (loading) {
