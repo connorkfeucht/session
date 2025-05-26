@@ -53,19 +53,36 @@ export default function Home() {
     const userId = session?.user.id;
     if (!userId) throw new Error("No active session");  
 
-    const { error: insertError } = await supabase
-      .from("likes")
-      .insert([{
-        uid: (await supabase.auth.getSession()).data.session?.user.id,
-        aid: aid,
-      }])
-    
-    if (insertError) throw insertError;
-    
-    // updating likedActivities
-    const copy = new Set(likedActivities);
-    copy.add(aid);
-    setLikedActivities(copy);
+    const isLiked = likedActivities.has(aid);
+
+    if (!isLiked) { // if the activity isn't liked yet
+      // inserting like into DB
+      const { error: insertError } = await supabase
+        .from("likes")
+        .insert([{
+          uid: (await supabase.auth.getSession()).data.session?.user.id,
+          aid: aid,
+        }])
+      
+      if (insertError) throw insertError;
+      // updating likedActivities
+      const copy = new Set(likedActivities);
+      copy.add(aid);
+      setLikedActivities(copy);
+    } else { // if activity is already liked then delete it.
+      // deleting from DB
+      const { error: deleteError } = await supabase
+        .from("likes")
+        .delete()
+        .eq("uid", userId)
+        .eq("aid", aid)
+
+      if (deleteError) throw deleteError;
+      // updating likedActivities
+      const copy = new Set(likedActivities);
+      copy.delete(aid);
+      setLikedActivities(copy);
+    }
   }
 
   useEffect(() => {
