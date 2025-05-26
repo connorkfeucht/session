@@ -13,7 +13,7 @@ import { supabase } from "../../lib/supabase";
 
 // for putting together the whole post
 type ActivityItem = { // "***" == not implemented yet
-  aid: string; // activities
+  aid: number; // activities
   username: string | null; // profiles
   uid: string; // activities
   avatar_url: string | null; // profiles
@@ -40,15 +40,43 @@ type DBActivityRow = {
 export default function Home() {
   const [activities, setActivities] = useState<ActivityItem[] | null>(null);
   const [loading, setLoading] = useState(true);
+  const [likedActivities, setLikedActivities] = useState<Set<number>>(new Set()); // to keep track of which activities the user has liked
   // TODO: Mood and Productivity sliders
   // TODO: Order the activities by newest
   // TODO: write function for like button. hook up to backend
   // TODO: Add Images
 
+  const handleLike = async (aid: number) => {
+    const {
+        data: { session },
+    } = await supabase.auth.getSession();
+    const userId = session?.user.id;
+    if (!userId) throw new Error("No active session");  
+
+    const { error: insertError } = await supabase
+      .from("likes")
+      .insert([{
+        uid: (await supabase.auth.getSession()).data.session?.user.id,
+        aid: aid,
+      }])
+    
+    if (insertError) throw insertError;
+    
+    // updating likedActivities
+    const copy = new Set(likedActivities);
+    copy.add(aid);
+    setLikedActivities(copy);
+  }
+
   useEffect(() => {
     const loadFeed = async () => {
       try {
         // TODO: Put in real data, data is displayed if friends and is_private = false
+        const {
+            data: { session },
+        } = await supabase.auth.getSession();
+        const userId = session?.user.id;
+        if (!userId) throw new Error("No active session"); 
 
         const { data: activitiesData, error: activitiesError } = await supabase
           .from("activities")
@@ -68,7 +96,7 @@ export default function Home() {
             if (profileError) throw profileError;
 
             return {
-              aid: r.aid.toString(),
+              aid: r.aid,
               uid: r.uid,
               username: profileData?.username || "unknown",
               avatar_url: profileData?.avatar_url || null,
@@ -84,6 +112,16 @@ export default function Home() {
         );
 
         setActivities(items);
+
+        const { data: likedRows, error: likedError } = await supabase
+          .from("likes")
+          .select("aid")
+          .eq("uid", userId);
+
+        if (likedError) throw likedError;
+
+        const likedSet = new Set(likedRows?.map((r) => r.aid));
+        setLikedActivities(likedSet);
 
       } catch (error: any) {
         console.error("Error loading profile/activites:", error.message);
@@ -126,8 +164,9 @@ export default function Home() {
               source={{ uri: act.avatar_url || "https://via.placeholder.com/40/cccccc?text=U", }} style={styles.avatarSmall}/>
             <Text style={styles.username}>{act.username}</Text>
             {/* like button */}
-            <TouchableOpacity style={styles.likeButton}>
-              <Ionicons name="heart-outline" size={24} color="#111" />
+            <TouchableOpacity style={styles.likeButton} onPress={() => handleLike(act.aid)}>
+              <Ionicons 
+              name={likedActivities.has(act.aid) ? "heart" : "heart-outline"} size={24} color="#111" />
             </TouchableOpacity>
           </View>
 

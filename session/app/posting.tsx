@@ -70,6 +70,8 @@ export default function Posting() {
             .from("profiles")
             .update({ seshns_completed: currentCount + 1 })
             .eq("id", userId);
+        
+        if (updateError) throw updateError;
 
         // go back to home page
         router.replace({
