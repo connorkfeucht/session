@@ -8,8 +8,8 @@ export default function Study() {
     const WORK_DURATION = 25 * 60;
     const BREAK_DURATION = 5 * 60;
 
-    const [timer, setTimer] = useState(WORK_DURATION); // initial countdown value (60 seconds)
-    const [isRunning, setIsRunning] = useState(false); // tracks if the timer is running
+    const [timer, setTimer] = useState(WORK_DURATION); 
+    const [isRunning, setIsRunning] = useState(false);
     const [isWorkPhase, setIsWorkPhase] = useState(true);
     const [setsCompleted, setSetsCompleted] = useState(0);
 
@@ -18,11 +18,11 @@ export default function Study() {
     useEffect(() => {
         let interval: NodeJS.Timeout | null = null;
 
-        if (isRunning && timer > 0) {
+        if (isRunning && timer > 0) { // if the timer is running and should still run
             interval = setInterval(() => {
                 setTimer((prevTimer) => prevTimer - 1);
             }, 1000); // decrease timer by 1 every second, normally 1000
-        } else if (isRunning && timer === 0) {
+        } else if (isRunning && timer === 0) { // if timer is running and needs to stop
             clearInterval(interval); // clear interval when timer reaches 0
             
             if (isWorkPhase) { // if timer is 0 and just finished work phase

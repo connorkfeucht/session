@@ -1,7 +1,6 @@
 import { Text, View, TouchableOpacity, ScrollView, Image, TextInput, Switch } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
-import Slider from "@react-native-community/slider";
+import { useState } from "react";
 import styles from "./styles";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { supabase } from "@/lib/supabase";
@@ -23,11 +22,8 @@ export default function Posting() {
     const toggleSwitch = () => {
         if (isPrivate) {
             setIsPrivate(false);
-            // console.log("public activity");
         } else {
             setIsPrivate(true);
-            // console.log("private activity");
-
         }
     }
 
@@ -39,7 +35,7 @@ export default function Posting() {
         const userId = session?.user.id;
         if (!userId) throw new Error("No active session");
 
-        // Creating Activity in Supabase
+        // creating Activity in Supabase
         const { data: activityData, error: insertError } = await supabase
             .from('activities')
             .insert([{
@@ -54,6 +50,7 @@ export default function Posting() {
         if (insertError) throw insertError;
         console.log("insert ->", {activityData, insertError})
 
+        // updating the number of seshns_completed in the database.
         // 1) fetching seshns_completed
         const { data: profileRow, error: fetchError } = await supabase
             .from("profiles")
@@ -78,7 +75,7 @@ export default function Posting() {
             pathname: "/1-home"
         });
     }
-    // TODO: Add productivity scale
+    // TODO: Add productivity and mood sliders
     return (
     <View style={styles.containerTwo}>
         <Text style={{...styles.statsText, marginTop: 20, marginBottom: 20}}>You completed {setsCompleted} sets this seshn!</Text>
@@ -147,7 +144,7 @@ export default function Posting() {
             <Switch onValueChange={toggleSwitch} value={isPrivate} />
         </View>
 
-        { /* TODO: Productivity Scale Here */}
+        { /* TODO: Productivity and mood slider here */}
 
         <TouchableOpacity style={{...styles.button, alignSelf: "center"}} onPress={handlePostSeshn}>
             <Text style={styles.buttonText}>FINISH</Text>

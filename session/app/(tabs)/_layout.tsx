@@ -2,7 +2,7 @@ import { Tabs } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 export default function TabsLayout() {
-    return (
+    return ( // returns the bottom tab bar which is on home study and profile
         <Tabs
             screenOptions={{
                 headerShown: false, // Makes the (tabs) header not show
@@ -15,7 +15,7 @@ export default function TabsLayout() {
                 name="1-home"
                 options={{
                     tabBarLabel: "Home",
-                    tabBarIcon: ({ color, size }) => <FontAwesome name="home" size={size} color={color}/> // TODO: Find icons to put here
+                    tabBarIcon: ({ color, size }) => <FontAwesome name="home" size={size} color={color}/>
                 }}
             />
             <Tabs.Screen

@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   ActivityIndicator, 
   Alert,
-  Platform,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { useState, useEffect } from "react";
@@ -78,8 +77,8 @@ export default function Profile() {
     loadProfile();
   }, []);
 
-  const handleEditUsername = () => {
-    Alert.prompt(
+  const handleEditUsername = () => { // pop up when user presses on their username to change it
+    Alert.prompt( // iOS pop up
       "Edit Username",
       "Enter a new username:",
       [
@@ -91,7 +90,7 @@ export default function Profile() {
               return
             }
             setLoading(true)
-            const { error } = await supabase
+            const { error } = await supabase // sets the new username
               .from("profiles")
               .update({username: text.trim()})
               .eq("id", profile!.id)
@@ -112,7 +111,7 @@ export default function Profile() {
     )
   }
 
-  const handleSignOut = async () => {
+  const handleSignOut = async () => { // handles when the user presses Sign Out button
     const { error } = await supabase.auth.signOut();
     if (error) {
       console.error("Error signing out: ", error.message);
@@ -122,7 +121,7 @@ export default function Profile() {
     }
   }
 
-  if (loading) {
+  if (loading) { // if profile is still loading
     return (
       <View style={styles.container}>
         <ActivityIndicator size="large"/>
@@ -130,7 +129,7 @@ export default function Profile() {
     );
   }
 
-  if (!profile) {
+  if (!profile) { // if there was an error getting the users profile
     return (
       <View style={styles.container}>
         <Text style={styles.statsText}>Profile Not Found.</Text>

@@ -5,7 +5,7 @@ import * as SplashScreen from 'expo-splash-screen';
 
 SplashScreen.preventAutoHideAsync();
 
-export default function RootLayout() {
+export default function RootLayout() { // top header which displays app name
   const [loaded] = useFonts({ // TODO: decide on a better font
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     PlayfairDisplay: require('../assets/fonts/PlayfairDisplay-VariableFont_wght.ttf'),

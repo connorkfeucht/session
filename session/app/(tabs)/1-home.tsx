@@ -41,13 +41,14 @@ export default function Home() {
   const [activities, setActivities] = useState<ActivityItem[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [likedActivities, setLikedActivities] = useState<Set<number>>(new Set()); // to keep track of which activities the user has liked
+
   // TODO: Mood and Productivity sliders
   // TODO: Order the activities by newest
   // TODO: write function for like button. hook up to backend
   // TODO: Add Images
 
-  const handleLike = async (aid: number) => {
-    const {
+  const handleLike = async (aid: number) => { // handles when user presses like icon on an activity, likes or unlikes the activity.
+    const { // getting the current session and user's id
         data: { session },
     } = await supabase.auth.getSession();
     const userId = session?.user.id;
@@ -88,13 +89,15 @@ export default function Home() {
   useEffect(() => {
     const loadFeed = async () => {
       try {
-        // TODO: Put in real data, data is displayed if friends and is_private = false
-        const {
+        // TODO: Put in real data, data is displayed if friends and a public activity. currently displaying all public activities.
+
+        const { // getting session and user id
             data: { session },
         } = await supabase.auth.getSession();
         const userId = session?.user.id;
         if (!userId) throw new Error("No active session"); 
-
+        
+        // fetching all public activities
         const { data: activitiesData, error: activitiesError } = await supabase
           .from("activities")
           .select("aid, uid, title, description, sets_completed, created_at, location")
@@ -102,8 +105,10 @@ export default function Home() {
 
         if (activitiesError) throw activitiesError;
 
+        // creating array items which has combined attributes from activities and profiles
         const items: ActivityItem[] = await Promise.all(
           (activitiesData || []).map(async (r) => {
+            // fetching username and avatar_url of the owner of current activity
             const { data: profileData, error: profileError } = await supabase
               .from("profiles")
               .select("username, avatar_url")
@@ -112,7 +117,7 @@ export default function Home() {
 
             if (profileError) throw profileError;
 
-            return {
+            return { // building ActivityItem instances
               aid: r.aid,
               uid: r.uid,
               username: profileData?.username || "unknown",
@@ -130,6 +135,7 @@ export default function Home() {
 
         setActivities(items);
 
+        // getting activities which the user has liked
         const { data: likedRows, error: likedError } = await supabase
           .from("likes")
           .select("aid")
@@ -153,7 +159,7 @@ export default function Home() {
     loadFeed();
   }, [])
 
-  if (loading) {
+  if (loading) { // if loading return spinning circle
     return (
       <View style={styles.container}>
         <ActivityIndicator size="large"/>
@@ -161,7 +167,7 @@ export default function Home() {
     );
   }
 
-  if (activities === null) {
+  if (activities === null) { // no activites
     return (
       <View style={styles.container}>
         <Text style={styles.statsText}> There are currently no activities to be displayed. </Text>
