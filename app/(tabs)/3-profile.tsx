@@ -22,17 +22,6 @@ type ProfileRow = {
   seshns_completed: number;
 }
 
-// type ActivitiesRow = {
-//   aid: number,
-//   title: string,
-//   created_at: string,
-//   description: string,
-//   is_private: boolean,
-//   sets_completed: number,
-//   location: string,
-//   images: string[],
-// }
-
 export default function Profile() {
   const router = useRouter();
   const [profile, setProfile] = useState<ProfileRow | null>(null);
@@ -58,14 +47,6 @@ export default function Profile() {
 
         if (profileError) throw profileError;
         setProfile(profileData);
-
-        // const { data: activitiesData, error: activitiesError } = await supabase
-        //   .from("activities")
-        //   .select("aid, title, created_at, description, is_private, sets_completed, location, images")
-        //   .eq("uid", userId);
-
-        // if (activitiesError) throw activitiesError;
-        // setActivities(activitiesData);
 
       } catch(error: any) {
         console.error("Error loading profile/activites:", error.message);
