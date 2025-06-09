@@ -37,7 +37,8 @@ export default function Activities() {
         const { data: activitiesData, error: activitiesError } = await supabase
           .from("activities")
           .select("aid, title, created_at, description, is_private, sets_completed, location, images")
-          .eq("uid", userId);
+          .eq("uid", userId)
+          .order("created_at", { ascending: false });
 
         if (activitiesError) throw activitiesError;
         setActivities(activitiesData);
