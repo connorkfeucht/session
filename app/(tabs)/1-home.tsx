@@ -44,7 +44,6 @@ export default function Home() {
 
   // TODO: Mood and Productivity sliders
   // TODO: Order the activities by newest
-  // TODO: write function for like button. hook up to backend
   // TODO: Add Images
 
   const handleLike = async (aid: number) => { // handles when user presses like icon on an activity, likes or unlikes the activity.
@@ -102,6 +101,7 @@ export default function Home() {
           .from("activities")
           .select("aid, uid, title, description, sets_completed, created_at, location")
           .eq("is_private", false)
+          .order("created_at", { ascending: false }); // orders from newest to oldest
 
         if (activitiesError) throw activitiesError;
 
