@@ -120,7 +120,7 @@ export default function Profile() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.profileHeader}>
+      <View style={{...styles.profileHeader, borderWidth: 0}}>
         <Image source={{uri: profile.avatar_url || "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg?20200418092106"}} style={styles.avatar}/>
         <View style={styles.profileInfo}>
           <View style={{...styles.row, marginBottom: 0}}>
