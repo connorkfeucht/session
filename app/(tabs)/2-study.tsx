@@ -16,14 +16,12 @@ export default function Study() {
     // TODO: Need to have section that starts a study session before timer shows up
 
     useEffect(() => {
-        let interval: NodeJS.Timeout | null = null;
+        let interval: ReturnType<typeof setInterval> | undefined;
 
         if (isRunning && timer > 0) { // if the timer is running and should still run
-            interval = setInterval(() => {
-                setTimer((prevTimer) => prevTimer - 1);
-            }, 1000); // decrease timer by 1 every second, normally 1000
+            interval = setInterval(() => setTimer(t => t - 1), 1000);
         } else if (isRunning && timer === 0) { // if timer is running and needs to stop
-            clearInterval(interval); // clear interval when timer reaches 0
+            if (interval != undefined) clearInterval(interval); // clear interval when timer reaches 0
             
             if (isWorkPhase) { // if timer is 0 and just finished work phase
                 setSetsCompleted((prevSets) => prevSets + 1);
