@@ -1,4 +1,4 @@
-import { Text, View, ActivityIndicator, ScrollView, Image, TouchableOpacity, } from "react-native";
+import { Text, View, ActivityIndicator, ScrollView, Image, TouchableOpacity, Alert} from "react-native";
 import styles from "./styles";
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
@@ -52,8 +52,28 @@ export default function Activities() {
     loadActivities();
   })
 
-  const handleDeleteSeshn = () => {
-    // TODO: delete activity from supabase after confirming that you want to delete it
+  const handleDeleteSeshn = (aid: number) => {
+    Alert.prompt(
+      "Delete Activity",
+      "Are you sure you want to delete this activity? This action cannot be undone.",
+      [{text: "Cancel", style: "cancel"},
+        {text: "Delete", onPress: async () => {
+          setLoading(true);
+          const { error } = await supabase
+            .from("activities")
+            .delete()
+            .eq("aid", aid)
+          setLoading(false);
+
+          if (error) {
+            Alert.alert("There was an error deleting this activity.")
+          } else {
+            Alert.alert("Activity successfully deleted.")
+          }
+        }}
+      ]
+    );
+
   }
 
   if (loading) { // if activities are still loading
@@ -81,7 +101,7 @@ export default function Activities() {
           {/* meta row: sets + duration */}
           <View style={{...styles.metaRow, marginBottom: 5}}>
             <Text style={styles.activityTitle}>{act.title}</Text>
-            <TouchableOpacity onPress={handleDeleteSeshn}><FontAwesome name="trash" size={24} color="#111"/></TouchableOpacity>
+            <TouchableOpacity onPress={() => handleDeleteSeshn(act.aid)}><FontAwesome name="trash" size={24} color="#111"/></TouchableOpacity>
           </View>
           <Text style={styles.activityDesc}>{act.description}</Text>
           <Text style={styles.metaItem}>{act.sets_completed} sets</Text>
