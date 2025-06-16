@@ -58,6 +58,35 @@ export default function Profile() {
     loadProfile();
   }, []);
 
+  const handleEditBio = () => {
+    Alert.prompt(
+      "Edit Bio",
+      "Enter a new bio:",
+      [
+        {text: "Cancel", style: "cancel"},
+        {text: "Save", onPress: async (text) => {
+          const newBio = (text ?? "").trim() // if text is null then replaces with empty string and trims
+
+          setLoading(true);
+          const { error } = await supabase
+            .from("profiles")
+            .update({bio: newBio})
+            .eq("id", profile!.id)
+          setLoading(false);
+
+          if (error) {
+            Alert.alert("Error updating Bio:", error.message)
+          } else {
+            setProfile((p) => (p ? { ...p, bio: newBio } : p))
+            Alert.alert("Bio successfully updated.")
+          }
+        }}
+      ],
+      "plain-text",
+      profile?.bio ?? ""
+    )
+  }
+
   const handleEditUsername = () => { // pop up when user presses on their username to change it
     Alert.prompt( // iOS pop up
       "Edit Username",
@@ -127,7 +156,7 @@ export default function Profile() {
             <Text style={styles.username} onPress={handleEditUsername}>@{profile.username.toLowerCase()}</Text>
             <TouchableOpacity onPress={() => router.push({pathname: "../friends"})}><FontAwesome name="users" size={24}/></TouchableOpacity>
           </View>
-          <Text style={styles.bio}>{profile.bio}</Text>
+          <Text style={styles.bio} onPress={handleEditBio}>{profile.bio}</Text>
           <Text style={styles.statsText}>{profile.seshns_completed} Completed Seshns</Text>
         </View>
       </View>
