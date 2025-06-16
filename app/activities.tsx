@@ -18,7 +18,6 @@ type ActivitiesRow = {
 
 export default function Activities() {
   // TODO: Add Images and other data about the activity.
-  // TODO: implement delete seshn function
   // TODO: Add functionality to turn seshns public and private
   const [activities, setActivities] = useState<ActivitiesRow[] | null>(null);
   const [loading, setLoading] = useState(true);
@@ -53,7 +52,7 @@ export default function Activities() {
   })
 
   const handleDeleteSeshn = (aid: number) => {
-    Alert.prompt(
+    Alert.alert(
       "Delete Activity",
       "Are you sure you want to delete this activity? This action cannot be undone.",
       [{text: "Cancel", style: "cancel"},
