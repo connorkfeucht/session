@@ -40,8 +40,6 @@ export default function Auth() {
       Alert.alert('Error signing up:', error.message)
     } else if (!session) {
       Alert.alert('No session returned! Check Supabase logs.')
-    } else {
-      // TODO: DO I NEED TO DO SOMETHING HERE?
     }
 
     setLoading(false)

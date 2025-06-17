@@ -39,7 +39,7 @@ export default function Posting() {
         const { data: activityData, error: insertError } = await supabase
             .from('activities')
             .insert([{
-                uid: (await supabase.auth.getSession()).data.session?.user.id,
+                uid: userId,
                 title: title,
                 description: caption, 
                 is_private: isPrivate, 
