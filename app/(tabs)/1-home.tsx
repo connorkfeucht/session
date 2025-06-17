@@ -174,8 +174,7 @@ export default function Home() {
         <View key={act.aid} style={styles.activityCard}>
           {/* header: avatar + username */}
           <View style={styles.cardHeader}>
-            <Image
-              source={{ uri: act.avatar_url || "https://via.placeholder.com/40/cccccc?text=U", }} style={styles.avatarSmall}/>
+            <Image source={{ uri: act.avatar_url || "https://via.placeholder.com/40/cccccc?text=U", }} style={styles.avatarSmall}/>
             <Text style={styles.username}>{act.username}</Text>
             {/* like button */}
             <TouchableOpacity style={styles.likeButton} onPress={() => handleLike(act.aid)}>

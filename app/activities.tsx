@@ -27,7 +27,6 @@ export default function Activities() {
   useEffect(() => {
     const loadActivities = async () => {
       try {
-        
         // getting activities from supabase
         const { data: activitiesData, error: activitiesError } = await supabase
           .from("activities")

@@ -1,21 +1,62 @@
-import { Text, View, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { Text, View, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator, ScrollView, Image } from "react-native";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import getCurrentUserId from "@/app/utils/authUtils";
 
+type IncomingRequestRow = {
+  requester_id: string,
+  addressee_id: string,
+  created_at: string,
+  status: string,
+  requester_username: string,
+  requester_avatar_url: string,
+}
+
 export default function Friends() {
   const [value, setValue] = useState<string>("");
-  const userId = getCurrentUserId();
-
+  const [incomingRequests, setIncomingRequests] = useState<IncomingRequestRow[] | null>();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadIncomingFriendRequests = async () => {
+      const userId = await getCurrentUserId();
       try {
-        
+        const {data: incomingRequestData, error: incomingRequestError } = await supabase // fetching incoming pending requests for user
+          .from("friendships")
+          .select()
+          .eq("addressee_id", userId)
+          .eq("status", "pending")
+
+        if (incomingRequestError) throw incomingRequestError;
+
+        const items: IncomingRequestRow[] = await Promise.all(
+          (incomingRequestData || []).map(async (r) => { // fetching the username and avatar of the current friend request sender
+            const {data: profileData, error: profileError } = await supabase
+              .from("profiles")
+              .select("username, avatar_url")
+              .eq("id", r.requester_id)
+              .single()
+            
+            if (profileError) throw profileError;
+
+            return {
+              requester_id: r.requester_id,
+              addressee_id: r.addressee_id,
+              created_at: r.created_at,
+              status: r.status,
+              requester_username: profileData.username,
+              requester_avatar_url: profileData.avatar_url,
+            }
+          })
+
+        )
+
+        setIncomingRequests(items);
+
       } catch(error: any) {
-
+        console.error("Error loading incoming friend requests: ", error.message)
       } finally {
-
+        setLoading(false);
       }
     }
 
@@ -23,7 +64,7 @@ export default function Friends() {
   }, [])
 
   const handleSendFriendRequest = async () => {
-
+    const userId = await getCurrentUserId();
     const { data: addresseeData, error: selectError } = await supabase // returns an array of users that match the query.
       .from("profiles")
       .select("id, username")
@@ -71,6 +112,14 @@ export default function Friends() {
 
   }
 
+  if (loading) { // if activities are still loading
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large"/>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <TextInput
@@ -84,7 +133,19 @@ export default function Friends() {
       <TouchableOpacity style={styles.sendButton} onPress={handleSendFriendRequest}>
         <Text style={styles.text}>Send</Text>
       </TouchableOpacity>
+
+      <ScrollView style={styles.scrollView} contentContainerStyle={{justifyContent: "center", alignItems: "center",}}>
+        {incomingRequests?.map((request) => (
+          <View key={request.requester_id} style={styles.incomingRequestCard}>
+            <View style={styles.row}>
+              <Image source={{ uri: request.requester_avatar_url || "https://via.placeholder.com/40/cccccc?text=U", }} style={styles.avatar}/>
+              <Text>{request.requester_username}</Text>
+            </View>
+          </View>
+        ))}
+      </ScrollView>
     </View>
+
   );
 }
 
@@ -119,6 +180,34 @@ const styles = StyleSheet.create({
     borderColor: "#111",
     marginBottom: 12,
     marginTop: 12,
+  },
+  scrollView: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+  incomingRequestCard: {
+    width: "100%",
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 3,
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 12,
+  },
+  avatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "#eee",
+    marginRight: 12,
   }
 
 });
