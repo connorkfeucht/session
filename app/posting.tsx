@@ -4,6 +4,7 @@ import { useState } from "react";
 import styles from "./styles";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { supabase } from "@/lib/supabase";
+import getCurrentUserId from "./utils/authUtils";
 
 export default function Posting() {
     const router = useRouter();
@@ -14,6 +15,7 @@ export default function Posting() {
     const [location, setLocation] = useState(""); // TODO: make a proper location function
     const [productivity, setProductivity] = useState(50);
     const [isPrivate, setIsPrivate] = useState(false);
+    const userId = getCurrentUserId();
     
     const pickImage = () => {
         // TODO: make image selecting function
@@ -28,13 +30,6 @@ export default function Posting() {
     }
 
     const handlePostSeshn = async () => {
-        // getting session
-        const {
-            data: { session },
-        } = await supabase.auth.getSession();
-        const userId = session?.user.id;
-        if (!userId) throw new Error("No active session");
-
         // creating Activity in Supabase
         const { data: activityData, error: insertError } = await supabase
             .from('activities')

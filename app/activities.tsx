@@ -3,6 +3,7 @@ import styles from "./styles";
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import getCurrentUserId from "./utils/authUtils";
 
 
 type ActivitiesRow = {
@@ -21,16 +22,11 @@ export default function Activities() {
   // TODO: Add functionality to turn seshns public and private
   const [activities, setActivities] = useState<ActivitiesRow[] | null>(null);
   const [loading, setLoading] = useState(true);
+  const userId = getCurrentUserId();
 
   useEffect(() => {
     const loadActivities = async () => {
       try {
-        // get the current session
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
-        const userId = session?.user.id;
-        if (!userId) throw new Error("No user session");
         
         // getting activities from supabase
         const { data: activitiesData, error: activitiesError } = await supabase
@@ -49,7 +45,7 @@ export default function Activities() {
     }
 
     loadActivities();
-  })
+  }, [])
 
   const handleDeleteSeshn = (aid: number) => {
     Alert.alert(

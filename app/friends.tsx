@@ -1,15 +1,28 @@
-import { Text, View, TextInput, TouchableOpacity } from "react-native";
-import styles from "./styles";
+import { Text, View, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import getCurrentUserId from "@/app/utils/authUtils";
 
 export default function Friends() {
   const [value, setValue] = useState<string>("");
+  const userId = getCurrentUserId();
 
-  const handleAddFriend = async () => {
-    const { data: { session }, } = await supabase.auth.getSession();
-    const userId = session?.user.id;
-    if (!userId) throw new Error("No active session");
+
+  useEffect(() => {
+    const loadIncomingFriendRequests = async () => {
+      try {
+        
+      } catch(error: any) {
+
+      } finally {
+
+      }
+    }
+
+    loadIncomingFriendRequests();
+  }, [])
+
+  const handleSendFriendRequest = async () => {
 
     const { data: addresseeData, error: selectError } = await supabase // returns an array of users that match the query.
       .from("profiles")
@@ -54,6 +67,10 @@ export default function Friends() {
 
   }
 
+  const handleAcceptFriendRequest = async () => {
+
+  }
+
   return (
     <View style={styles.container}>
       <TextInput
@@ -64,9 +81,44 @@ export default function Friends() {
           multiline
           style={styles.textBox}
       />
-      <TouchableOpacity style={styles.button} onPress={handleAddFriend}>
-        <Text style={styles.buttonText}>Send</Text>
+      <TouchableOpacity style={styles.sendButton} onPress={handleSendFriendRequest}>
+        <Text style={styles.text}>Send</Text>
       </TouchableOpacity>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    paddingHorizontal: 20,
+  },
+  text: {
+    textAlign: "center",
+    fontSize: 16,
+    fontWeight: "500",
+    color: "#111",
+    fontFamily: "PlayfairDisplay",
+  },
+  sendButton: {
+    width: "45%",
+    paddingVertical: 12,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: "#111",
+    marginBottom: 12,
+  },
+  textBox: {
+    width: "100%",
+    borderRadius: 6,
+    borderWidth: 1,
+    paddingVertical: 12,
+    borderColor: "#111",
+    marginBottom: 12,
+    marginTop: 12,
+  }
+
+});

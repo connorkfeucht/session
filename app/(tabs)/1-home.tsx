@@ -10,6 +10,7 @@ import {
 import Ionicons from "@expo/vector-icons/Ionicons";
 import styles from "../styles";
 import { supabase } from "../../lib/supabase";
+import getCurrentUserId from "../utils/authUtils";
 
 // for putting together the whole post
 type ActivityItem = { // "***" == not implemented yet
@@ -41,18 +42,13 @@ export default function Home() {
   const [activities, setActivities] = useState<ActivityItem[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [likedActivities, setLikedActivities] = useState<Set<number>>(new Set()); // to keep track of which activities the user has liked
+  const userId = getCurrentUserId();
 
   // TODO: Mood and Productivity sliders
   // TODO: Order the activities by newest
   // TODO: Add Images
 
   const handleLike = async (aid: number) => { // handles when user presses like icon on an activity, likes or unlikes the activity.
-    const { // getting the current session and user's id
-        data: { session },
-    } = await supabase.auth.getSession();
-    const userId = session?.user.id;
-    if (!userId) throw new Error("No active session");  
-
     const isLiked = likedActivities.has(aid);
 
     if (!isLiked) { // if the activity isn't liked yet
@@ -60,7 +56,7 @@ export default function Home() {
       const { error: insertError } = await supabase
         .from("likes")
         .insert([{
-          uid: (await supabase.auth.getSession()).data.session?.user.id,
+          uid: userId,
           aid: aid,
         }])
       
@@ -89,12 +85,7 @@ export default function Home() {
     const loadFeed = async () => {
       try {
         // TODO: Put in real data, data is displayed if friends and a public activity. currently displaying all public activities.
-
-        const { // getting session and user id
-            data: { session },
-        } = await supabase.auth.getSession();
-        const userId = session?.user.id;
-        if (!userId) throw new Error("No active session"); 
+        const userId = await getCurrentUserId();
         
         // fetching all public activities
         const { data: activitiesData, error: activitiesError } = await supabase

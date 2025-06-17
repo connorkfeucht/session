@@ -11,6 +11,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "../../lib/supabase";
 import styles from "../styles";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import getCurrentUserId from "../utils/authUtils";
 
 
 type ProfileRow = {
@@ -30,14 +31,8 @@ export default function Profile() {
 
   useEffect(() => {
     const loadProfile = async () => {
+      const userId = await getCurrentUserId();
       try {
-        // get the session to find the user id
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
-        const userId = session?.user.id;
-        if (!userId) throw new Error("No user session");
-
         // query profiles table for that id
         const { data: profileData, error: profileError } = await supabase
           .from("profiles")
