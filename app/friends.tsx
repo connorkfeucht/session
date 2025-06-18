@@ -82,12 +82,13 @@ export default function Friends() {
       throw new Error("You cannot send a friend request to yourself.")
     }
 
-    // checks that the friend request doesn't already exist.
+    // checks that the friend request doesn't already exist
+    // checks both directions: user -> addresse and addresse -> user
     const { data: friendshipsData, error: friendshipsError } = await supabase
       .from("friendships")
       .select("requester_id, addressee_id")
-      .eq("requester_id", userId)
-      .eq("addressee_id", addresseeData[0].id)
+      .in("requester_id", [userId, addresseeData[0].id])
+      .in("addressee_id", [userId, addresseeData[0].id])
 
     if (friendshipsError) throw friendshipsError;
     if (friendshipsData && friendshipsData.length > 0) {
