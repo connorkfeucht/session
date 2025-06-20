@@ -1,4 +1,4 @@
-import { Text, View, ActivityIndicator, ScrollView, Image, TouchableOpacity, Alert} from "react-native";
+import { Text, View, ActivityIndicator, ScrollView, TouchableOpacity, Alert} from "react-native";
 import styles from "./styles";
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
@@ -25,27 +25,27 @@ export default function Activities() {
   const userId = getCurrentUserId();
 
   useEffect(() => {
-    const loadActivities = async () => {
-      try {
-        const userId = await getCurrentUserId();
-        // getting activities from supabase
-        const { data: activitiesData, error: activitiesError } = await supabase
-          .from("activities")
-          .select("aid, title, created_at, description, is_private, sets_completed, location, images")
-          .eq("uid", userId)
-          .order("created_at", { ascending: false });
-
-        if (activitiesError) throw activitiesError;
-        setActivities(activitiesData);
-      } catch(error: any) {
-        console.error("Error loading activites:", error.message);
-      } finally {
-        setLoading(false);
-      }
-    }
-
     loadActivities();
   }, [])
+  
+  const loadActivities = async () => {
+    try {
+      const userId = await getCurrentUserId();
+      // getting activities from supabase
+      const { data: activitiesData, error: activitiesError } = await supabase
+        .from("activities")
+        .select("aid, title, created_at, description, is_private, sets_completed, location, images")
+        .eq("uid", userId)
+        .order("created_at", { ascending: false });
+
+      if (activitiesError) throw activitiesError;
+      setActivities(activitiesData);
+    } catch(error: any) {
+      console.error("Error loading activites:", error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const handleDeleteSeshn = (aid: number) => {
     Alert.alert(
@@ -68,7 +68,27 @@ export default function Activities() {
         }}
       ]
     );
+  }
 
+  const handleTogglePrivacy = async (aid: number) => {
+    setLoading(true);
+    const { data: selectData, error: selectError } = await supabase
+      .from("activities")
+      .select("is_private")
+      .eq("aid", aid)
+      .single()
+
+    if (selectError) throw selectError;
+    const swapped = !selectData.is_private;
+
+    const { error } = await supabase
+      .from("activities")
+      .update({is_private: swapped})
+      .eq("aid", aid)
+
+    if (error) throw error;
+    await loadActivities();
+    setLoading(false);
   }
 
   if (loading) { // if activities are still loading
@@ -96,7 +116,10 @@ export default function Activities() {
           {/* meta row: sets + duration */}
           <View style={{...styles.metaRow, marginBottom: 5}}>
             <Text style={styles.activityTitle}>{act.title}</Text>
-            <TouchableOpacity onPress={() => handleDeleteSeshn(act.aid)}><FontAwesome name="trash" size={24} color="#111"/></TouchableOpacity>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <TouchableOpacity style={{marginRight: 5}} onPress={() => handleTogglePrivacy(act.aid)}><FontAwesome name={act.is_private ? "lock" : "unlock"} size={24} color="#111"/></TouchableOpacity>
+              <TouchableOpacity onPress={() => handleDeleteSeshn(act.aid)}><FontAwesome name="trash" size={24} color="#111"/></TouchableOpacity>
+            </View>
           </View>
           <Text style={styles.activityDesc}>{act.description}</Text>
           <Text style={styles.metaItem}>{act.sets_completed} sets</Text>
