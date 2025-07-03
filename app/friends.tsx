@@ -1,7 +1,8 @@
-import { Text, View, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator, ScrollView, Image } from "react-native";
+import { Text, View, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator, ScrollView, Image, Touchable } from "react-native";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import getCurrentUserId from "@/app/utils/authUtils";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 type IncomingRequestRow = {
   requester_id: string,
@@ -109,7 +110,23 @@ export default function Friends() {
 
   }
 
-  const handleAcceptFriendRequest = async () => {
+  const handleAcceptFriendRequest = async (requester_id: string) => {
+    const userId = await getCurrentUserId();
+    try {
+      const {data: requestData, error: requestError } = await supabase
+        .from("friendships")
+        .update({status: "accepted"})
+        .eq("requester_id", requester_id)
+        .eq("addressee_id", userId)
+        .eq("status", "pending")
+  
+        if (requestError) throw requestError;
+
+        // removes the request from incoming requests in ui
+        setIncomingRequests((prev) => prev?.filter((r) => r.requester_id !== requester_id) ?? null );
+    } catch(error: any) {
+      console.error("There was an error accepting the friend request", error.message)
+    }
 
   }
 
@@ -134,13 +151,14 @@ export default function Friends() {
       <TouchableOpacity style={styles.sendButton} onPress={handleSendFriendRequest}>
         <Text style={styles.text}>Send</Text>
       </TouchableOpacity>
-
-      <ScrollView style={styles.scrollView} contentContainerStyle={{justifyContent: "center", alignItems: "center",}}>
+      <Text style={styles.text}>{Array.isArray(incomingRequests) && incomingRequests.length > 0 ? "Incoming friend requests": "You currently have no incoming friend requests"}</Text>
+      <ScrollView style={styles.scrollView} contentContainerStyle={{justifyContent: "center", alignItems: "center"}}>
         {incomingRequests?.map((request) => (
           <View key={request.requester_id} style={styles.incomingRequestCard}>
             <View style={styles.row}>
               <Image source={{ uri: request.requester_avatar_url || "https://via.placeholder.com/40/cccccc?text=U", }} style={styles.avatar}/>
-              <Text>{request.requester_username}</Text>
+              <Text style={styles.text}>{request.requester_username}</Text>
+              <TouchableOpacity onPress={() => handleAcceptFriendRequest(request.requester_id)}><FontAwesome name="check" size={24}/></TouchableOpacity>
             </View>
           </View>
         ))}
@@ -185,6 +203,7 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
     backgroundColor: "#fff",
+    width: "90%",
   },
   incomingRequestCard: {
     width: "100%",
